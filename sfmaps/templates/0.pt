@@ -11,6 +11,7 @@
     <title>SF Train/Trolley Maps | 1000&times;i</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
     <style>
         #js-app-container {
             width: 100%;
@@ -21,11 +22,30 @@
             overflow: hidden;
         }
 
+        #controls {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            max-width: 20%;
+            max-height: 900px;
+        }
+
+        label.checkbox {
+            margin-right: 5px;
+        }
+
+        .hidden-route {
+            display: none;
+        }
+
+
     </style>
 </head>
 <body>
     <noscript>You must have JavaScript enabled for this page to display properly</noscript>
     <svg id="js-app-container">
     </svg>
+    <form id="controls" class="form form-inline">
+    </form>
 </body>
 </html>
