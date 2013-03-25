@@ -48,7 +48,7 @@
 
         // });
 
-        d3.json('/static/data/neighborhoods.json', function (data) {
+        d3.json('static/data/neighborhoods.json', function (data) {
             var mv = new MapView('#js-app-container', {
                 data:data
                 , projection: projection
