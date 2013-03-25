@@ -178,7 +178,7 @@
                         if(locs.vehicle) {
                             circles = circles.data(locs.vehicle);
 
-                            circles.transition()
+                            circles
                             .attr('cx', function (stop) {
                                 return get_stop_xy(stop)[0];
                             })
