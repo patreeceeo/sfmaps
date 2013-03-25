@@ -11,6 +11,9 @@
         this.width = getOption('width', 500);
         this.height = getOption('height', 500);
         this.projection = getOption('projection', d3.geo.path().projection());
+        this.fill = getOption('fill', 'transparent');
+        this.stroke = getOption('stroke', 'black');
+        this.strokeWidth = getOption('strokeWidth', '1');
     };
 
     _.extend(MapView.prototype, {
@@ -24,9 +27,9 @@
             .data(this.data.features)
             .enter().append('path')
             .attr('d', path_gen)
-            .attr('stroke', 'gray')
-            .attr('stroke-width', 1)
-            .attr('fill', 'transparent')
+            .attr('stroke', this.stroke)
+            .attr('stroke-width', this.strokeWidth)
+            .attr('fill', this.fill)
             .append('title')
             .text(function(d) { 
                 return d.properties && d.properties.name;
@@ -49,6 +52,7 @@
             var mv = new MapView('#js-app-container', {
                 data:data
                 , projection: projection
+                , stroke: 'gray'
             });
             mv.render(); 
         });
@@ -64,8 +68,13 @@
                 , routeConfig: function (routeTag) {
                     return nextbus_base+"command=routeConfig"+nextbus_agency+"&r="+routeTag;
                 }
+                , vehicleLocations: function (routeTag, time) {
+                    time = !_.isUndefined(time) ? time : (new Date()).getTime();
+                    var url = nextbus_base+"command=vehicleLocations"+nextbus_agency+"&r="+routeTag+"&t="+time;
+                    return url;
+                }
             };
-        }
+        };
 
         $.get(url().routes(), function(xml) { 
             var routes = $.xml2json(xml).route; 
@@ -97,73 +106,77 @@
                 };
             }
 
-            var stops_map = d3.map(), deferreds = [];
+            // var routes_defers = [];
             _.each(routes, function (route) {
-                var deferred = $.get(url().routeConfig(route.tag), function (xml) {
-                    var rc = $.xml2json(xml);
-                    stops_map.set(route.tag, rc.route.stop);
-                    var data = nextbus_path_to_geojson(rc.route.path);
-                    console.log(data); 
-                    var mv = new MapView('#js-app-container', {
-                        data: data                        
-                        , projection: projection
+                // if(route.tag == 'F') {
+                    $.get(url().routeConfig(route.tag), function (xml) {
+                        var rc = $.xml2json(xml);
+                        // stops_map.set(route.tag, rc.route.stop);
+                        var data = nextbus_path_to_geojson(rc.route.path);
+                        var mv = new MapView('#js-app-container', {
+                            data: data                        
+                            , projection: projection
+                            , stroke: '#'+rc.route.color
+                        });
+                        mv.render();
+                        // kind of cheating
+                        route.color = rc.route.color;
+
                     });
-                    mv.render();
-                });
-                deferreds.push(deferred);
+
+                    var get_locs = function (cb) {
+                        $.get(url().vehicleLocations(route.tag, 0), function (xml) {
+                            var locs = $.xml2json(xml);
+                            cb(locs);
+                        });
+                    };
+
+                    var circles = d3.select('#js-app-container');
+
+                    get_locs(function (locs) {
+                        if(locs.vehicle) {
+                            circles = circles.append('g')
+                                .selectAll('circle')
+                                .data(locs.vehicle);
+
+                            circles.enter()
+                                .append('circle')
+                                .attr('cx', function (stop) {
+                                    return get_stop_xy(stop)[0];
+                                })
+                                .attr('cy', function (stop) {
+                                    return get_stop_xy(stop)[1];
+                                })
+                                .attr('r', 5)
+                                .attr('fill', function () {
+                                    return '#'+route.color;
+                                });
+                        }
+                    });
+
+                    var update_vehicles = function (locs) {
+                        if(locs.vehicle) {
+                            circles = circles.data(locs.vehicle);
+
+                            circles.transition()
+                                .attr('cx', function (stop) {
+                                    return get_stop_xy(stop)[0];
+                                })
+                                .attr('cy', function (stop) {
+                                    return get_stop_xy(stop)[1];
+                                }); 
+
+                            circles.exit()
+                                .remove();
+                        }
+                    };
+
+                    window.setInterval(function () {
+                        get_locs(update_vehicles);
+                    }, 10000);
+                // }
             });
 
-
-            $.when.apply(null, deferreds).then(function () {
-                var stop_index = 0;
-
-                var get_current_locations = function () {
-                    return _.reduce(stops_map.values(), function (memo, stops) {
-                        memo.push(stops[stop_index % stops.length]);
-                        return memo;
-                    }, []);
-                };
-
-                var curr_locs = get_current_locations();
-
-                // console.log('n locs:', curr_locs.length);
-                var circles = d3.select('#js-app-container')
-                .append('g')
-                .selectAll('circle')
-                .data(curr_locs);
-
-                circles.enter()
-                .append('circle')
-                .attr('cx', function (stop) {
-                    return get_stop_xy(stop)[0];
-                })
-                .attr('cy', function (stop) {
-                    return get_stop_xy(stop)[1];
-                })
-                .attr('r', 10);
-
-                // circles.exit()
-                //     .remove();
-            
-                var update_vehicles = function () {
-                    curr_locs = get_current_locations();
-
-                    circles.data(curr_locs)
-                        .transition()
-                        .attr('cx', function (stop) {
-                            return get_stop_xy(stop)[0];
-                        })
-                        .attr('cy', function (stop) {
-                            return get_stop_xy(stop)[1];
-                        }); 
-                }
-
-                update_vehicles();
-                window.setInterval(function () {
-                    update_vehicles();
-                    stop_index++;
-                }, 1000);
-            });
         });
 
 
