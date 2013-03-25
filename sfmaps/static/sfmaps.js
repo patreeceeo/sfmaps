@@ -123,7 +123,6 @@
                 show: function (show) {
                     var selection = $('.route-'+this.route.tag.replace(' ', '-'));
                     if(show) {
-                        console.log('showing route',this.route);
                         this.rendered && selection.show() || this.render();
                         this.rendered = true;
                     } else {
@@ -202,13 +201,14 @@
 
                 // create controls
                 var render_route_buttons = function () {
+                    console.log('creating button',route.tag);
                     var active = route_ui_state.get(route.tag.replace(' ', '-')) ? ' active':'';
-                    $('#controls').append('<button type="button" class="btn toggle-route-button'+active+'" data-route-tag='+route.tag+'>'+route.tag+'</button>');
+                    $('#controls').append('<button type="button" class="btn toggle-route-button'+active+'" data-route-tag='+route.tag.replace(' ', '-')+'>'+route.tag+'</button>');
                 }();
 
                 var rv = new RouteView(route);
                 rv.show(route_ui_state.get(route.tag));
-                route_view_map.set(route.tag, rv);
+                route_view_map.set(route.tag.replace(' ', '-'), rv);
             });
 
             $('.toggle-route-button').click(function () {
