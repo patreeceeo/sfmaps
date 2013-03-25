@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <link rel="stylesheet" type="text/css" href="/static/0.css"> -->
+    <script type="text/javascript" src="/static/vendor/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/d3.v3.js"></script>
+    <script type="text/javascript" src="/static/vendor/underscore-min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.xml2json.js"></script>
+
+    <script type="text/javascript" src="/static/sfmaps.js"></script>
+    <title>SF Train/Trolley Maps | 1000&times;i</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #js-app-container {
+            width: 100%;
+            height: 900px;
+        }
+        
+        body {
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+    <noscript>You must have JavaScript enabled for this page to display properly</noscript>
+    <svg id="js-app-container">
+    </svg>
+</body>
+</html>
