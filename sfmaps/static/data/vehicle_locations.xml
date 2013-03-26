@@ -1,0 +1,15 @@
+<body>
+    <vehicle id="1453" routeTag="N" dirTag="out" lat="37.7664199" lon="-
+        122.44896" secsSinceReport="29" predictable="true" heading="276"/>
+    <vehicle id="1549" routeTag="N" dirTag="in" lat="37.77631" lon="-
+        122.3941" secsSinceReport="3" predictable="true" heading="45"/>
+    <vehicle id="1517" routeTag="N" dirTag="in_short" lat="37.76035" lon="-
+        122.50794" secsSinceReport="69" predictable="true" heading="267"/>
+    <vehicle id="1547" routeTag="N" dirTag="out" lat="37.76952" lon="-
+        122.43174" secsSinceReport="28" predictable="true" heading="85"/>
+    <vehicle id="1404" routeTag="N" dirTag="out" lat="37.76003" lon="-
+        122.50919" secsSinceReport="9" predictable="true" heading="117"/>
+    <vehicle id="1400" routeTag="N" dirTag="in" lat="37.76415" lon="-
+        122.46409" secsSinceReport="50" predictable="true" heading="266"/>
+    <lastTime time="1144953510433"/>
+<body>

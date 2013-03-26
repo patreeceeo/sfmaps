@@ -1,0 +1,70 @@
+<body>
+      <route tag="N" title="N - Judah" color="003399" oppositeColor="ffffff"
+latMin="37.7601699" latMax="37.7932299" lonMin="-122.5092" lonMax="-122.38798">
+        <stop tag="KINGd4S0" title="King St and 4th St" shortTitle="King & 4th"
+         lat="37.776036" lon="-122.394355" stopId="1"/>
+        <stop tag="KINGd2S0" title="King St and 2nd St" shortTitle="King & 2nd"
+         lat="37.7796152" lon="-122.3898067" stopId="2"/>
+        <stop tag="EMBRBRAN" title="Embarcadero and Brannan St"
+         shortTitle="Embarcadero & Brannan" lat="37.7844455" lon="-122.3880081"
+         stopId="3"/>
+        <stop tag="EMBRFOLS" title="Embarcadero and Folsom St"
+         shortTitle="Embarcadero & Folsom" lat="37.7905742" lon="-122.3896326"
+         stopId="4"/>
+        ...
+        <direction tag="out" title="Outbound to La Playa" name=”Outbound”
+useForUI="true">
+          <stop tag="KINGd4S0"/>
+          <stop tag="KINGd2S0"/>
+          <stop tag="EMBRBRAN"/>
+          <stop tag="EMBRFOLS"/>
+          <stop tag="CVCENTF"/>
+        </direction>
+        <direction tag="in" title="Inbound to Caltrain" name=”Inbound”
+useForUI="true">
+          <stop tag="CVCENTF"/>
+          <stop tag="EMBRFOLS"/>
+          <stop tag="EMBRBRAN"/>
+          <stop tag="KINGd2S0"/>
+          <stop tag="KINGd4S0"/>
+        </direction>
+        <direction tag="in_short" title="Short Run" name=”Inbound”
+useForUI="false">
+          <stop tag="CVCENTF"/>
+          <stop tag="EMBRFOLS"/>
+          <stop tag="EMBRBRAN"/>
+        </direction>
+        ...
+        <path>
+          <point lat="37.7695171" lon="-122.4287571"/>
+          <point lat="37.7695099" lon="-122.42887"/>
+        </path>
+        <path>
+          <point lat="37.77551" lon="-122.39513"/>
+          <point lat="37.77449" lon="-122.39642"/>
+          <point lat="37.77413" lon="-122.39687"/>
+          <point lat="37.77385" lon="-122.39721"/>
+          <point lat="37.7737399" lon="-122.39734"/>
+          <point lat="37.77366" lon="-122.39744"/>
+          <point lat="37.77358" lon="-122.39754"/>
+          <point lat="37.77346" lon="-122.39766"/>
+          <point lat="37.77338" lon="-122.39772"/>
+          <point lat="37.77329" lon="-122.39778"/>
+          <point lat="37.77317" lon="-122.39784"/>
+        </path>
+        <path>
+          <point lat="37.76025" lon="-122.50927"/>
+          <point lat="37.76023" lon="-122.50928"/>
+          <point lat="37.76017" lon="-122.50928"/>
+          <point lat="37.7601299" lon="-122.50927"/>
+          <point lat="37.76008" lon="-122.50924"/>
+          <point lat="37.76006" lon="-122.50921"/>
+          <point lat="37.7600399" lon="-122.50916"/>
+          <point lat="37.76003" lon="-122.50912"/>
+          <point lat="37.7600399" lon="-122.50906"/>
+          <point lat="37.76005" lon="-122.50902"/>
+          <point lat="37.76008" lon="-122.50898"/>
+          <point lat="37.76017" lon="-122.50885"/>
+      </path>
+    </route>
+</body>
