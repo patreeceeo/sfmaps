@@ -3,15 +3,19 @@
 <head>
     <!-- <link rel="stylesheet" type="text/css" href="/static/0.css"> -->
     <script type="text/javascript" src="${request.static_url('sfmaps:static/vendor/jquery-1.9.1.min.js')}"></script>
-    <script type="text/javascript" src="/static/vendor/d3.v3.js"></script>
-    <script type="text/javascript" src="/static/vendor/underscore-min.js"></script>
-    <script type="text/javascript" src="/static/vendor/jquery.xml2json.js"></script>
+    <script type="text/javascript" src="${request.static_url('sfmaps:static/vendor/d3.v3.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('sfmaps:static/vendor/underscore-min.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('sfmaps:static/vendor/jquery.xml2json.js')}"></script>
 
-    <script type="text/javascript" src="/static/sfmaps.js"></script>
+    <script type='text/javascript'>
+        var map_json_url = '${request.static_url("sfmaps:static/data/neighborhoods.json")}';
+    </script>
+
+    <script type="text/javascript" src="${request.static_url('sfmaps:static/sfmaps.js')}"></script>
     <title>SF Train/Trolley Maps | 1000&times;i</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${request.static_url('sfmaps:static/vendor/bootstrap/css/bootstrap.min.css')}" />
     <style>
         #js-app-container {
             width: 100%;

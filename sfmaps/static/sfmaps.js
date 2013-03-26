@@ -60,7 +60,7 @@
         projection.center([-122.5, 37.788]);
         projection.scale(220000);
 
-        d3.json('static/data/neighborhoods.json', function (data) {
+        d3.json(map_json_url, function (data) {
             var mv = new MapView('#js-app-container', {
                 data:data
                 , projection: projection
