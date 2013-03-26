@@ -7,6 +7,13 @@
         , 90: true
         , 91: true
     });
+    
+    $.ajaxSetup({
+        error: function () {
+            window.alert("There was an error contacting the NextBus server, please try again later.");
+        }
+        , timeout: 5000
+    });
 
     var MapView = function (el, options) {
         var getOption = function (name, fallback) {
@@ -131,30 +138,17 @@
                 }
                 , render: function () {
                     var that = this;
-                    $.get(url().routeConfig(this.route.tag), function (xml) {
-                        var rc = $.xml2json(xml);
-                        var data = nextbus_path_to_geojson(rc.route.path);
-                        that.map_view = new MapView('#js-app-container', {
-                            data: data                        
-                            , projection: projection
-                            , stroke: '#'+rc.route.color
-                            , cssClass: 'route-'+that.route.tag.replace(' ','-')
-                        });
-                        that.map_view.render();
-                        that.color = rc.route.color;
-
-                    });
 
                     var get_locs = function (cb) {
                         $.get(url().vehicleLocations(that.route.tag, 0), function (xml) {
                             var locs = $.xml2json(xml);
                             cb(locs);
-                        });
+                        }, 'xml');
                     };
 
                     var circles = d3.select('#js-app-container');
 
-                    get_locs(function (locs) {
+                    var create_circles = function (locs) {
                         if(locs.vehicle) {
                             circles = circles.append('g')
                             .attr('class', 'route-'+that.route.tag.replace(' ', '-'))
@@ -172,7 +166,22 @@
                             .attr('r', 5)
                             .attr('fill', '#'+that.color);
                         }
-                    });
+                    };
+
+                    $.get(url().routeConfig(this.route.tag), function (xml) {
+                        var rc = $.xml2json(xml);
+                        var data = nextbus_path_to_geojson(rc.route.path);
+                        that.map_view = new MapView('#js-app-container', {
+                            data: data                        
+                            , projection: projection
+                            , stroke: '#'+rc.route.color
+                            , cssClass: 'route-'+that.route.tag.replace(' ','-')
+                        });
+                        that.map_view.render();
+                        that.color = rc.route.color;
+
+                        get_locs(create_circles);
+                    }, 'xml');
 
                     var update_vehicles = function (locs) {
                         if(locs.vehicle) {
@@ -222,7 +231,7 @@
                 $(this).toggleClass('active');  
             });
 
-        });
+        }, 'xml');
 
 
         var refresh = function () {
