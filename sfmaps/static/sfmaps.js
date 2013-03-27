@@ -15,7 +15,7 @@
     $.ajaxSetup({
         error: _.once(function () {
             config.get('alert_on_connection_error') && 
-                window.alert("There was an error contacting the NextBus server, loading cached data instead of live data.");
+                window.alert("There was an error contacting the NextBus server, this may only be an intermittent problem.");
             console.log('error');
             // config.set('use_live_data', false);
         })
