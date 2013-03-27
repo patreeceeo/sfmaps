@@ -1,17 +1,24 @@
 (function (d3, $, _) {
     'use strict';
 
-    var route_ui_state = d3.map({
-        F: true
-        , 17: true
-        , 90: true
-        , 91: true
+    var config = d3.map({
+        show_routes: d3.map({
+            F: true
+            , 17: true
+            , 90: true
+            , 91: true
+        })
+        , use_live_data: true
+        , alert_on_connection_error: false
     });
     
     $.ajaxSetup({
-        error: function () {
-            window.alert("There was an error contacting the NextBus server, please try again later.");
-        }
+        error: _.once(function () {
+            config.get('alert_on_connection_error') && 
+                window.alert("There was an error contacting the NextBus server, loading cached data instead of live data.");
+            console.log('error');
+            config.set('use_live_data', false);
+        })
         , timeout: 5000
     });
 
@@ -72,18 +79,24 @@
         var url = function () {
             var nextbus_base = 'http://webservices.nextbus.com/service/publicXMLFeed?';
             var nextbus_agency = '&a=sf-muni';
+            var use_live_data = config.get('use_live_data');
+            console.log('use_live_data',use_live_data);
 
             return {
                 routes: function () {
-                    return nextbus_base+"command=routeList"+nextbus_agency;
+                    if(use_live_data) return nextbus_base+"command=routeList"+nextbus_agency;
+                    return '/static/data/route_list.xml';
                 }
                 , routeConfig: function (routeTag) {
-                    return nextbus_base+"command=routeConfig"+nextbus_agency+"&r="+routeTag;
+                    if(use_live_data) return nextbus_base+"command=routeConfig"+nextbus_agency+"&r="+routeTag;
+                    return '/static/data/route_config.xml';
                 }
                 , vehicleLocations: function (routeTag, time) {
-                    time = !_.isUndefined(time) ? time : (new Date()).getTime();
-                    var url = nextbus_base+"command=vehicleLocations"+nextbus_agency+"&r="+routeTag+"&t="+time;
-                    return url;
+                    if(use_live_data) {
+                        time = !_.isUndefined(time) ? time : (new Date()).getTime();
+                        return nextbus_base+"command=vehicleLocations"+nextbus_agency+"&r="+routeTag+"&t="+time;
+                    }
+                    return '/static/data/vehicle_locations.xml';
                 }
             };
         };
@@ -139,7 +152,7 @@
                 , render: function () {
                     var that = this;
 
-                    var get_locs = function (cb) {
+                    var get_vehicle_locations = function (cb) {
                         $.get(url().vehicleLocations(that.route.tag, 0), function (xml) {
                             var locs = $.xml2json(xml);
                             cb(locs);
@@ -180,7 +193,7 @@
                         that.map_view.render();
                         that.color = rc.route.color;
 
-                        get_locs(create_circles);
+                        get_vehicle_locations(create_circles);
                     }, 'xml');
 
                     var update_vehicles = function (locs) {
@@ -198,7 +211,8 @@
                     };
 
                     this.interval_id = window.setInterval(function () {
-                        get_locs(update_vehicles);
+                        console.log('here!');
+                        get_vehicle_locations(update_vehicles);
                     }, 10000);
                 }
 
@@ -211,12 +225,13 @@
                 // create controls
                 var render_route_buttons = function () {
                     console.log('creating button',route.tag);
-                    var active = route_ui_state.get(route.tag.replace(' ', '-')) ? ' active':'';
+                    var active = config.get('show_routes').get(route.tag.replace(' ', '-')) ? ' active':'';
+
                     $('#controls').append('<button type="button" class="btn toggle-route-button'+active+'" data-route-tag='+route.tag.replace(' ', '-')+'>'+route.tag+'</button>');
                 }();
 
                 var rv = new RouteView(route);
-                rv.show(route_ui_state.get(route.tag));
+                rv.show(config.get('show_routes').get(route.tag));
                 route_view_map.set(route.tag.replace(' ', '-'), rv);
             });
 
@@ -226,8 +241,8 @@
                 var toggle = function(map, key) {
                     map.set(key, !map.get(key));
                 };
-                toggle(route_ui_state, route_tag);
-                route_view_map.get(route_tag).show(route_ui_state.get(route_tag));
+                toggle(config.get('show_routes'), route_tag);
+                config.get('show_routes').get(route_tag).show(config.get('show_routes').get(route_tag));
                 $(this).toggleClass('active');  
             });
 
