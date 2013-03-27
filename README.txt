@@ -1,1 +1,1 @@
-A tribute to the city by the bay.
+This is just-for-fun weekend hack project utilizing d3.js.
