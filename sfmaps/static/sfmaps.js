@@ -9,7 +9,7 @@
             , 91: true
         })
         , use_live_data: true
-        , alert_on_connection_error: false
+        , alert_on_connection_error: true
     });
     
     $.ajaxSetup({
@@ -17,7 +17,7 @@
             config.get('alert_on_connection_error') && 
                 window.alert("There was an error contacting the NextBus server, loading cached data instead of live data.");
             console.log('error');
-            config.set('use_live_data', false);
+            // config.set('use_live_data', false);
         })
         , timeout: 5000
     });
