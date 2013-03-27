@@ -242,7 +242,7 @@
                     map.set(key, !map.get(key));
                 };
                 toggle(config.get('show_routes'), route_tag);
-                config.get('show_routes').get(route_tag).show(config.get('show_routes').get(route_tag));
+                route_view_map.get(route_tag).show(config.get('show_routes').get(route_tag));
                 $(this).toggleClass('active');  
             });
 
